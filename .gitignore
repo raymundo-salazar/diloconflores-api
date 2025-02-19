@@ -1,2 +1,11 @@
 dist
 node_modules
+.wwebjs_auth
+.wwebjs_cache
+*.py
+.venv
+venv
+requirements.txt
+downloads
+.DS_Store
+*.log
