@@ -11,11 +11,31 @@ import { TokenJwtPayload } from "@controllers/ApiController/types"
 import { avoidPaths, sessionTypesExpiration } from "./constants"
 import { Op } from "sequelize"
 import { convertPermissionToRegex } from "@helpers/auth"
+import { CustomPath } from "@controllers/RouteController/types"
 const { JWT_SECRET = "", REFRESH_TOKEN_SECRET = "" } = process.env
 
 class AuthController extends ApiController<Sessions> {
 	protected model = Sessions
 	protected entity = "session"
+	protected apiMethods = []
+	protected customPaths: CustomPath = {
+		login: {
+			method: "post",
+			path: "/login",
+		},
+		refreshToken: {
+			method: "post",
+			path: "/refresh-token",
+		},
+		logout: {
+			method: "post",
+			path: "/logout",
+		},
+		logoutAll: {
+			method: "post",
+			path: "/logout/all",
+		},
+	}
 
 	public login = async (req: Request, res: Response, next: NextFunction) => {
 		try {

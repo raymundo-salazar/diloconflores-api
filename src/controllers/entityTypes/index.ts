@@ -1,9 +1,9 @@
-import { ApiController } from "@controllers/ApiController";
-import { EntityTypes } from "@models/index";
+import { ApiController } from "@controllers/ApiController"
+import { EntityTypes } from "@models/index"
 
 class EntityTypesController extends ApiController<EntityTypes> {
-  protected model = EntityTypes;
-  protected entity = "entityTypes";
+	protected model = EntityTypes
+	protected entity = "entityTypes"
 }
 
-export default new EntityTypesController();
+export default new EntityTypesController()

@@ -5,6 +5,9 @@ export const avoidPaths: AvoidPaths[] = [
 	{ path: "/api/auth/login", method: "GET" },
 	{ path: "/api/auth/refresh-token", method: "POST" },
 	{ path: "/api/auth/logout", method: "POST" },
+	{ path: "/api/health", method: "GET" },
+	{ path: "/api/health/liveness", method: "GET" },
+	{ path: "/api/health/readiness", method: "GET" },
 ]
 
 export const sessionTypesExpiration = {

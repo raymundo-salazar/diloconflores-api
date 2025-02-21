@@ -9,6 +9,7 @@ import Sessions from "./sessions"
 import ActionTypes from "./actionTypes"
 import ActivityLogs from "./activityLogs"
 import EntityTypes from "./entityTypes"
+import Addresses from "./addresses"
 
 Roles.associate()
 Permission.associate()
@@ -21,6 +22,7 @@ Sessions.associate()
 ActionTypes.associate()
 ActivityLogs.associate()
 EntityTypes.associate()
+Addresses.associate()
 
 export {
 	Roles,
@@ -34,4 +36,5 @@ export {
 	ActionTypes,
 	ActivityLogs,
 	EntityTypes,
+	Addresses,
 }

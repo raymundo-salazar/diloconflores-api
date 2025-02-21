@@ -19,7 +19,7 @@ class Permission
 		Permission.belongsToMany(Role, {
 			through: RolePermission,
 			foreignKey: "permission_id",
-			as: "permission_roles",
+			as: "permission-roles",
 		})
 	}
 }

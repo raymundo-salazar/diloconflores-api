@@ -1,31 +1,34 @@
 import { Router } from "express"
-import users from "./users"
-import roles from "./roles"
-import permissions from "./permissions"
 import health from "./health"
-import auth from "./auth"
-import countries from "./countries"
-import states from "./states"
-import cities from "./cities"
-import actionTypes from "./actionTypes"
-import entityTypes from "./entityTypes"
-import activityLogs from "./activityLogs"
+
+import ActionTypes from "@controllers/actionTypes"
+import ActivityLogs from "@controllers/activityLogs"
+import Addresses from "@controllers/addresses"
+import AddressTypesController from "@controllers/addressTypes"
+import AuthController from "@controllers/auth"
+import Cities from "@controllers/cities"
+import Countries from "@controllers/countries"
+import EntityTypes from "@controllers/entityTypes"
+import Permissions from "@controllers/permissions"
+import RolesControllers from "@controllers/roles"
+import States from "@controllers/states"
+import Users from "@controllers/users"
 
 const routes = Router()
 
 routes.use("/health", health)
-routes.use("/auth", auth)
 
-routes.use("/roles", roles)
-routes.use("/permissions", permissions)
-routes.use("/users", users)
-
-routes.use("/countries", countries)
-routes.use("/states", states)
-routes.use("/cities", cities)
-
-routes.use("/action-types", actionTypes)
-routes.use("/entity-types", entityTypes)
-routes.use("/activity-logs", activityLogs)
+routes.use("/action-types", ActionTypes.apiRouter())
+routes.use("/activity-logs", ActivityLogs.apiRouter())
+routes.use("/address-types", AddressTypesController.apiRouter())
+routes.use("/addresses", Addresses.apiRouter())
+routes.use("/auth", AuthController.apiRouter())
+routes.use("/cities", Cities.apiRouter())
+routes.use("/countries", Countries.apiRouter())
+routes.use("/entity-types", EntityTypes.apiRouter())
+routes.use("/permissions", Permissions.apiRouter())
+routes.use("/roles", RolesControllers.apiRouter())
+routes.use("/states", States.apiRouter())
+routes.use("/users", Users.apiRouter())
 
 export default routes

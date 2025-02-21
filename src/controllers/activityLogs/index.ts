@@ -1,9 +1,9 @@
-import { ApiController } from "@controllers/ApiController";
-import { ActivityLogs } from "@models/index";
+import { ApiController } from "@controllers/ApiController"
+import { ActivityLogs } from "@models/index"
 
 class ActivityLogsController extends ApiController<ActivityLogs> {
-  protected model = ActivityLogs;
-  protected entity = "activityLogs";
+	protected model = ActivityLogs
+	protected entity = "activityLogs"
 }
 
-export default new ActivityLogsController();
+export default new ActivityLogsController()

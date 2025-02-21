@@ -9,10 +9,12 @@ import { processSearchParams } from "@helpers/db/where"
 import { AttributesRelation, DeviceInfo, IncludeOptions } from "./types"
 import { plural, singular } from "pluralize"
 import Joi from "joi"
-import { sign, SignOptions } from "jsonwebtoken"
+import { sign } from "jsonwebtoken"
 import { createHash } from "crypto"
 import useragent from "useragent"
 import geoip from "geoip-lite"
+import RouteController from "@controllers/RouteController"
+import { ApiMethods, CustomPath } from "@controllers/RouteController/types"
 const { JWT_SECRET = "", REFRESH_TOKEN_SECRET = "", GLOBAL_LANGUAGE = "en" } = process.env
 
 export class ApiController<T extends Model> {
@@ -20,15 +22,21 @@ export class ApiController<T extends Model> {
 	protected model!: ModelStatic<T>
 	protected entity!: string
 	protected association!: string
-	protected associations?: IncludeOptions[]
 	protected attributes!: AttributesRelation
 	protected uniqueAttributes!: AttributesRelation
 	protected schema!: Joi.ObjectSchema
 	protected createSchema!: Joi.ObjectSchema
+	protected createBulkSchema!: Joi.ArraySchema
 	protected updateSchema!: Joi.ObjectSchema
 	protected createAssociationSchema: Record<string, Joi.ObjectSchema> = {}
 	protected deleteAssociationSchema: Record<string, Joi.ObjectSchema> = {}
 	protected fieldsAssociations!: Record<string, string[]>
+	protected customPaths!: CustomPath
+	protected apiMethods!: ApiMethods[]
+
+	public get getEntity() {
+		return this.entity
+	}
 
 	public get logicalDelete() {
 		return this.model.options.paranoid
@@ -271,6 +279,35 @@ export class ApiController<T extends Model> {
 				res,
 				record,
 				req.t("api.created_successfully", { resource: singular(this.entity) }),
+				201
+			)
+		} catch (error: any) {
+			if (error.parent?.code === "ER_DUP_ENTRY") error = this.setCreationError(error, req)
+
+			if (error.resource) error.resource = this.entity
+			next(error)
+		}
+	}
+
+	public createRecordBulk = async (
+		req: Request<Record<string, string>, {}, any, any>,
+		res: Response,
+		next: NextFunction
+	) => {
+		try {
+			const { body } = req
+
+			if (this.createBulkSchema) {
+				const { error } = this.createBulkSchema.validate(body)
+				if (error) throw new MissingParametersError(error.message)
+			}
+
+			const records = await this.model.bulkCreate(body)
+			successResponse(
+				req,
+				res,
+				records,
+				req.t("api.created_successfully", { resource: plural(this.entity) }),
 				201
 			)
 		} catch (error: any) {
@@ -662,5 +699,24 @@ export class ApiController<T extends Model> {
 		} catch (error) {
 			next(error)
 		}
+	}
+
+	public apiRouter = () => {
+		const associations = this.getModelAssociations()
+		// if (this.entity === "roles")
+		// 	console.log(
+		// 		"associations",
+		// 		Object.entries(associations).map(([key, association]) => association.as || key)
+		// 	)
+		const router = new RouteController(
+			this,
+			Object.entries(associations).map(([key, association]) => association.as || key),
+			this.customPaths,
+			this.apiMethods
+		)
+
+		const _router = router.apiRouter()
+		// if (this.entity === "roles") console.log(_router)
+		return _router
 	}
 }
