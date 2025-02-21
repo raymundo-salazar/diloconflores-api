@@ -17,7 +17,7 @@
 							"name": "Permissions by role",
 							"item": [
 								{
-									"name": "Get permissions by role",
+									"name": "Get permissions by role - Modify this on github",
 									"request": {
 										"method": "GET",
 										"header": [],
